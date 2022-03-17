@@ -1,25 +1,612 @@
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "C:4889-big-trip-1/src/main.js":
-/*!**************************************!*\
-  !*** C:4889-big-trip-1/src/main.js ***!
-  \**************************************/
-/***/ (() => {
+/***/ "./src/render.js":
+/*!***********************!*\
+  !*** ./src/render.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-throw new Error("Module build failed: UnhandledSchemeError: Reading from \"C:4889-big-trip-1/src/main.js\" is not handled by plugins (Unhandled scheme).\nWebpack supports \"data:\" and \"file:\" URIs by default.\nYou may need an additional plugin to handle \"c:\" URIs.\n    at C:\\2044889-big-trip-1\\node_modules\\webpack\\lib\\NormalModule.js:825:25\n    at Hook.eval [as callAsync] (eval at create (C:\\2044889-big-trip-1\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:6:1)\n    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (C:\\2044889-big-trip-1\\node_modules\\tapable\\lib\\Hook.js:18:14)\n    at Object.processResource (C:\\2044889-big-trip-1\\node_modules\\webpack\\lib\\NormalModule.js:822:8)\n    at processResource (C:\\2044889-big-trip-1\\node_modules\\loader-runner\\lib\\LoaderRunner.js:220:11)\n    at iteratePitchingLoaders (C:\\2044889-big-trip-1\\node_modules\\loader-runner\\lib\\LoaderRunner.js:171:10)\n    at runLoaders (C:\\2044889-big-trip-1\\node_modules\\loader-runner\\lib\\LoaderRunner.js:397:2)\n    at NormalModule._doBuild (C:\\2044889-big-trip-1\\node_modules\\webpack\\lib\\NormalModule.js:812:3)\n    at NormalModule.build (C:\\2044889-big-trip-1\\node_modules\\webpack\\lib\\NormalModule.js:956:15)\n    at C:\\2044889-big-trip-1\\node_modules\\webpack\\lib\\Compilation.js:1367:12");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RenderPosition": () => (/* binding */ RenderPosition),
+/* harmony export */   "renderTemplate": () => (/* binding */ renderTemplate)
+/* harmony export */ });
+const RenderPosition = {
+  BEFOREBEGIN: 'beforebegin',
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
+  AFTEREND: 'afterend'
+};
+
+const renderTemplate = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+
+
+/***/ }),
+
+/***/ "./src/view/content-view.js":
+/*!**********************************!*\
+  !*** ./src/view/content-view.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createContentTemplate": () => (/* binding */ createContentTemplate)
+/* harmony export */ });
+const createContentTemplate = () => `<div class="page-body__container">
+  <section class="trip-events">
+    <h2 class="visually-hidden">Trip events</h2>
+
+    <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+      <div class="trip-sort__item  trip-sort__item--day">
+        <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
+        <label class="trip-sort__btn" for="sort-day">Day</label>
+      </div>
+
+      <div class="trip-sort__item  trip-sort__item--event">
+        <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event" disabled>
+        <label class="trip-sort__btn" for="sort-event">Event</label>
+      </div>
+
+      <div class="trip-sort__item  trip-sort__item--time">
+        <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
+        <label class="trip-sort__btn" for="sort-time">Time</label>
+      </div>
+
+      <div class="trip-sort__item  trip-sort__item--price">
+        <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
+        <label class="trip-sort__btn" for="sort-price">Price</label>
+      </div>
+
+      <div class="trip-sort__item  trip-sort__item--offer">
+        <input id="sort-offer" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-offer" disabled>
+        <label class="trip-sort__btn" for="sort-offer">Offers</label>
+      </div>
+    </form>
+
+    <ul class="trip-events__list">
+      <li class="trip-events__item">
+        <div class="event">
+          <time class="event__date" datetime="2019-03-18">MAR 18</time>
+          <div class="event__type">
+            <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+          </div>
+          <h3 class="event__title">Taxi Amsterdam</h3>
+          <div class="event__schedule">
+            <p class="event__time">
+              <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+              &mdash;
+              <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            </p>
+            <p class="event__duration">30M</p>
+          </div>
+          <p class="event__price">
+            &euro;&nbsp;<span class="event__price-value">20</span>
+          </p>
+          <h4 class="visually-hidden">Offers:</h4>
+          <ul class="event__selected-offers">
+            <li class="event__offer">
+              <span class="event__offer-title">Order Uber</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">20</span>
+            </li>
+          </ul>
+          <button class="event__favorite-btn event__favorite-btn--active" type="button">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </div>
+      </li>
+
+      <li class="trip-events__item">
+        <div class="event">
+          <time class="event__date" datetime="2019-03-18">MAR 18</time>
+          <div class="event__type">
+            <img class="event__type-icon" width="42" height="42" src="img/icons/flight.png" alt="Event type icon">
+          </div>
+          <h3 class="event__title">Flight Chamonix</h3>
+          <div class="event__schedule">
+            <p class="event__time">
+              <time class="event__start-time" datetime="2019-03-18T12:25">12:25</time>
+              &mdash;
+              <time class="event__end-time" datetime="2019-03-18T13:35">13:35</time>
+            </p>
+            <p class="event__duration">01H 10M</p>
+          </div>
+          <p class="event__price">
+            &euro;&nbsp;<span class="event__price-value">160</span>
+          </p>
+          <h4 class="visually-hidden">Offers:</h4>
+          <ul class="event__selected-offers">
+            <li class="event__offer">
+              <span class="event__offer-title">Add luggage</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">50</span>
+            </li>
+            <li class="event__offer">
+              <span class="event__offer-title">Switch to comfort</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">80</span>
+            </li>
+          </ul>
+          <button class="event__favorite-btn" type="button">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </div>
+      </li>
+
+      <li class="trip-events__item">
+        <div class="event">
+          <time class="event__date" datetime="2019-03-18">MAR 18</time>
+          <div class="event__type">
+            <img class="event__type-icon" width="42" height="42" src="img/icons/drive.png" alt="Event type icon">
+          </div>
+          <h3 class="event__title">Drive Chamonix</h3>
+          <div class="event__schedule">
+            <p class="event__time">
+              <time class="event__start-time" datetime="2019-03-18T14:30">14:30</time>
+              &mdash;
+              <time class="event__end-time" datetime="2019-03-18T16:05">16:05</time>
+            </p>
+            <p class="event__duration">01H 35M</p>
+          </div>
+          <p class="event__price">
+            &euro;&nbsp;<span class="event__price-value">160</span>
+          </p>
+          <h4 class="visually-hidden">Offers:</h4>
+          <ul class="event__selected-offers">
+            <li class="event__offer">
+              <span class="event__offer-title">Rent a car</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">200</span>
+            </li>
+          </ul>
+          <button class="event__favorite-btn  event__favorite-btn--active" type="button">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </div>
+      </li>
+
+      <li class="trip-events__item">
+        <div class="event">
+          <time class="event__date" datetime="2019-03-18">MAR 18</time>
+          <div class="event__type">
+            <img class="event__type-icon" width="42" height="42" src="img/icons/check-in.png" alt="Event type icon">
+          </div>
+          <h3 class="event__title">Check-in Chamonix</h3>
+          <div class="event__schedule">
+            <p class="event__time">
+              <time class="event__start-time" datetime="2019-03-18T12:25">16:20</time>
+              &mdash;
+              <time class="event__end-time" datetime="2019-03-18T13:35">17:00</time>
+            </p>
+            <p class="event__duration">40M</p>
+          </div>
+          <p class="event__price">
+            &euro;&nbsp;<span class="event__price-value">600</span>
+          </p>
+          <h4 class="visually-hidden">Offers:</h4>
+          <ul class="event__selected-offers">
+            <li class="event__offer">
+              <span class="event__offer-title">Add breakfast</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">50</span>
+            </li>
+          </ul>
+          <button class="event__favorite-btn event__favorite-btn--active" type="button">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </div>
+      </li>
+
+      <li class="trip-events__item">
+        <div class="event">
+          <time class="event__date" datetime="2019-03-19">MAR 19</time>
+          <div class="event__type">
+            <img class="event__type-icon" width="42" height="42" src="img/icons/sightseeing.png" alt="Event type icon">
+          </div>
+          <h3 class="event__title">Sightseeing Chamonix</h3>
+          <div class="event__schedule">
+            <p class="event__time">
+              <time class="event__start-time" datetime="2019-03-19T11:20">14:20</time>
+              &mdash;
+              <time class="event__end-time" datetime="2019-03-19T13:00">13:00</time>
+            </p>
+            <p class="event__duration">01H 20M</p>
+          </div>
+          <p class="event__price">
+            &euro;&nbsp;<span class="event__price-value">50</span>
+          </p>
+          <h4 class="visually-hidden">Offers:</h4>
+          <ul class="event__selected-offers">
+            <li class="event__offer">
+              <span class="event__offer-title">Book tickets</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">40</span>
+            </li>
+            <li class="event__offer">
+              <span class="event__offer-title">Lunch in city</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">30</span>
+            </li>
+          </ul>
+          <button class="event__favorite-btn" type="button">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </div>
+      </li>
+
+      <li class="trip-events__item">
+        <div class="event">
+          <time class="event__date" datetime="2019-03-19">MAR 19</time>
+          <div class="event__type">
+            <img class="event__type-icon" width="42" height="42" src="img/icons/drive.png" alt="Event type icon">
+          </div>
+          <h3 class="event__title">Drive Geneva</h3>
+          <div class="event__schedule">
+            <p class="event__time">
+              <time class="event__start-time" datetime="2019-03-19T10:00">16:00</time>
+              &mdash;
+              <time class="event__end-time" datetime="2019-03-19T11:00">17:00</time>
+            </p>
+            <p class="event__duration">01H</p>
+          </div>
+          <p class="event__price">
+            &euro;&nbsp;<span class="event__price-value">20</span>
+          </p>
+          <button class="event__favorite-btn" type="button">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </div>
+      </li>
+
+      <li class="trip-events__item">
+        <div class="event">
+          <time class="event__date" datetime="2019-03-19">MAR 19</time>
+          <div class="event__type">
+            <img class="event__type-icon" width="42" height="42" src="img/icons/flight.png" alt="Event type icon">
+          </div>
+          <h3 class="event__title">Flight Geneva</h3>
+          <div class="event__schedule">
+            <p class="event__time">
+              <time class="event__start-time" datetime="2019-03-19T18:00">18:00</time>
+              &mdash;
+              <time class="event__end-time" datetime="2019-03-19T19:00">19:00</time>
+            </p>
+            <p class="event__duration">01H</p>
+          </div>
+          <p class="event__price">
+            &euro;&nbsp;<span class="event__price-value">20</span>
+          </p>
+          <h4 class="visually-hidden">Offers:</h4>
+          <ul class="event__selected-offers">
+            <li class="event__offer">
+              <span class="event__offer-title">Add luggage</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">30</span>
+            </li>
+            <li class="event__offer">
+              <span class="event__offer-title">Switch to comfort</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">100</span>
+            </li>
+          </ul>
+          <button class="event__favorite-btn" type="button">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </div>
+      </li>
+
+      <li class="trip-events__item">
+        <div class="event">
+          <time class="event__date" datetime="2019-03-20">MAR 20</time>
+          <div class="event__type">
+            <img class="event__type-icon" width="42" height="42" src="img/icons/drive.png" alt="Event type icon">
+          </div>
+          <h3 class="event__title">Drive Geneva</h3>
+          <div class="event__schedule">
+            <p class="event__time">
+              <time class="event__start-time" datetime="2019-03-20T08:25">08:25</time>
+              &mdash;
+              <time class="event__end-time" datetime="2019-03-20T09:25">09:25</time>
+            </p>
+            <p class="event__duration">01H</p>
+          </div>
+          <p class="event__price">
+            &euro;&nbsp;<span class="event__price-value">20</span>
+          </p>
+          <button class="event__favorite-btn" type="button">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </div>
+      </li>
+
+      <li class="trip-events__item">
+        <div class="event">
+          <time class="event__date" datetime="2019-03-20">MAR 20</time>
+          <div class="event__type">
+            <img class="event__type-icon" width="42" height="42" src="img/icons/sightseeing.png" alt="Event type icon">
+          </div>
+          <h3 class="event__title">Sightseeing Geneva</h3>
+          <div class="event__schedule">
+            <p class="event__time">
+              <time class="event__start-time" datetime="2019-03-20T11:15">11:15</time>
+              &mdash;
+              <time class="event__end-time" datetime="2019-03-20T12:15">12:15</time>
+            </p>
+            <p class="event__duration">01H</p>
+          </div>
+          <p class="event__price">
+            &euro;&nbsp;<span class="event__price-value">180</span>
+          </p>
+          <button class="event__favorite-btn" type="button">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </div>
+      </li>
+    </ul>
+  </section>
+</div>`;
+
+/***/ }),
+
+/***/ "./src/view/filter-view.js":
+/*!*********************************!*\
+  !*** ./src/view/filter-view.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createFilterTemplate": () => (/* binding */ createFilterTemplate)
+/* harmony export */ });
+const createFilterTemplate = () => `<div class="trip-controls__filters">
+    <h2 class="visually-hidden">Filter events</h2>
+    <form class="trip-filters" action="#" method="get">
+      <div class="trip-filters__filter">
+        <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything">
+          <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
+      </div>
+
+      <div class="trip-filters__filter">
+        <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
+          <label class="trip-filters__filter-label" for="filter-future">Future</label>
+      </div>
+
+      <div class="trip-filters__filter">
+        <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" checked>
+          <label class="trip-filters__filter-label" for="filter-past">Past</label>
+      </div>
+
+      <button class="visually-hidden" type="submit">Accept filter</button>
+    </form>
+  </div>`;
+
+/***/ }),
+
+/***/ "./src/view/site-menu-view.js":
+/*!************************************!*\
+  !*** ./src/view/site-menu-view.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createSiteMenuTemplate": () => (/* binding */ createSiteMenuTemplate)
+/* harmony export */ });
+const createSiteMenuTemplate = () => `<div class="trip-controls__navigation">
+    <h2 class="visually-hidden">Switch trip view</h2>
+    <nav class="trip-controls__trip-tabs  trip-tabs">
+      <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
+      <a class="trip-tabs__btn" href="#">Stats</a>
+    </nav>
+  </div>`;
+
+/***/ }),
+
+/***/ "./src/view/sorting-view.js":
+/*!**********************************!*\
+  !*** ./src/view/sorting-view.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createSortingTemplate": () => (/* binding */ createSortingTemplate)
+/* harmony export */ });
+const createSortingTemplate = () => `<div class="page-body__container  page-header__container">
+  <img class="page-header__logo" src="img/logo.png" width="42" height="42" alt="Trip logo">
+
+  <div class="trip-main">
+    <section class="trip-main__trip-info  trip-info">
+      <div class="trip-info__main">
+        <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
+
+        <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+      </div>
+
+      <p class="trip-info__cost">
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+      </p>
+    </section>
+
+    <div class="trip-main__trip-controls  trip-controls">
+      <div class="trip-controls__navigation">
+        <h2 class="visually-hidden">Switch trip view</h2>
+        <nav class="trip-controls__trip-tabs  trip-tabs">
+          <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
+          <a class="trip-tabs__btn" href="#">Stats</a>
+        </nav>
+      </div>
+
+      <div class="trip-controls__filters">
+        <h2 class="visually-hidden">Filter events</h2>
+        <form class="trip-filters" action="#" method="get">
+          <div class="trip-filters__filter">
+            <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
+            <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
+          </div>
+
+          <div class="trip-filters__filter">
+            <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
+            <label class="trip-filters__filter-label" for="filter-future">Future</label>
+          </div>
+
+          <div class="trip-filters__filter">
+            <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
+            <label class="trip-filters__filter-label" for="filter-past">Past</label>
+          </div>
+
+          <button class="visually-hidden" type="submit">Accept filter</button>
+        </form>
+      </div>
+    </div>
+
+    <button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>
+  </div>
+</div>`;
 
 /***/ })
 
 /******/ 	});
 /************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["C:4889-big-trip-1/src/main.js"]();
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
 /******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!*********************!*\
+  !*** ./src/main.js ***!
+  \*********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _view_site_menu_view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./view/site-menu-view.js */ "./src/view/site-menu-view.js");
+/* harmony import */ var _render_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./render.js */ "./src/render.js");
+/* harmony import */ var _view_filter_view_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./view/filter-view.js */ "./src/view/filter-view.js");
+/* harmony import */ var _view_sorting_view_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./view/sorting-view.js */ "./src/view/sorting-view.js");
+/* harmony import */ var _view_content_view_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view/content-view.js */ "./src/view/content-view.js");
+
+
+
+
+
+const siteMainElement = document.querySelector('.main');
+const siteHeaderElement = siteMainElement.querySelector('.main__control');
+(0,_render_js__WEBPACK_IMPORTED_MODULE_1__.renderTemplate)(siteHeaderElement, (0,_view_site_menu_view_js__WEBPACK_IMPORTED_MODULE_0__.createSiteMenuTemplate)(), _render_js__WEBPACK_IMPORTED_MODULE_1__.RenderPosition.BEFOREEND);
+(0,_render_js__WEBPACK_IMPORTED_MODULE_1__.renderTemplate)(siteMainElement, (0,_view_filter_view_js__WEBPACK_IMPORTED_MODULE_2__.createFilterTemplate)(), _render_js__WEBPACK_IMPORTED_MODULE_1__.RenderPosition.BEFOREEND);
+(0,_render_js__WEBPACK_IMPORTED_MODULE_1__.renderTemplate)(siteMainElement, (0,_view_sorting_view_js__WEBPACK_IMPORTED_MODULE_3__.createSortingTemplate)(), _render_js__WEBPACK_IMPORTED_MODULE_1__.RenderPosition.BEFOREEND);
+(0,_render_js__WEBPACK_IMPORTED_MODULE_1__.renderTemplate)(siteMainElement, (0,_view_content_view_js__WEBPACK_IMPORTED_MODULE_4__.createContentTemplate)(), _render_js__WEBPACK_IMPORTED_MODULE_1__.RenderPosition.BEFOREEND);
+})();
+
 /******/ })()
 ;
 //# sourceMappingURL=bundle.js.map
