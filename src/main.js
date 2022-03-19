@@ -15,9 +15,11 @@ const tripEvents = Array.from({length: TRIP_EVENTS_COUNT}, generateTripEvent);
 const tripControlsNavigationElement = document.querySelector('.trip-controls__navigation');
 const tripControlsFiltersElement = document.querySelector('.trip-controls__filters');
 const tripEventsElement = document.querySelector('.trip-events');
-const tripEventsListElement = tripEventsElement.querySelector('.trip-events__list');
 
 renderTemplate(tripEventsElement, createEventsListTemplate(), RenderPosition.BEFOREEND);
+
+const tripEventsListElement = tripEventsElement.querySelector('.trip-events__list');
+
 renderTemplate(tripControlsNavigationElement, createTripTabsTemplate(), RenderPosition.BEFOREEND);
 renderTemplate(tripControlsFiltersElement, createTripFiltersTemplate(), RenderPosition.BEFOREEND);
 renderTemplate(tripEventsElement, createTripSortTemplate(), RenderPosition.AFTERBEGIN);

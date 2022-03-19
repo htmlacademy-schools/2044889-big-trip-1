@@ -68,8 +68,7 @@ const generatePhotos = () => {
   const photos = [];
 
   for (let i = 0; i < 5; i++) {
-    photos[i] = 'http://picsum.photos/248/152?';
-    photos[i] += getRandomInteger(0, 99).toString();
+    photos[i] = `http://picsum.photos/248/152?r=${Math.random()}`;
   }
 
   return photos;
