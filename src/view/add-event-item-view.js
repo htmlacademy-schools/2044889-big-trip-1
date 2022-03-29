@@ -2,42 +2,38 @@
 import dayjs from 'dayjs';
 import { eventTypes } from '../mock/event-types';
 import { locations } from '../mock/locations';
+import { createElement } from '../render';
 
 const createAddEventItemTemplate = (tripEvent) => {
-  const {offers, description, photos} = tripEvent;
+  const {offers: offers, description, photos} = tripEvent;
   const eventType = 'check-in';
-  const templateDatetime = dayjs().add(14, 'day').hour(10).minute(0).format('DD/MM/YY HH:mm');
+  const templateDatetime = dayjs().add(17, 'day').hour(12).minute(0).format('D/MM/YY HH:mm');
   const createOfferElement = (offer) => {
-    const {name, price, type} = offer;
+    const {name = offer.name, price = offer.price, type = offer.type} = offer;
 
     return `<div class="event__available-offers">
                       <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type}" >
+                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox" name="event-offer-${offer.type}" >
                         <label class="event__offer-label" for="event-offer-name-1">
-                          <span class="event__offer-title">${offer.name}</span>
+                          <span class="event__offer-title">${name}</span>
                           &plus;&euro;&nbsp;
-                          <span class="event__offer-price">${offer.price}</span>
+                          <span class="event__offer-price">${price}</span>
                         </label>
                       </div>
     `;
   };
 
-  const addableOfferElements = offers.map(createOfferElement).join('');
-  const createAddableOfferList = (addableOffers) => {
+  const createOffersList = (addableOffers) => {
     if (addableOffers.length !== 0) {
       return `<section class="event__section  event__section--offers">
-                    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-                    ${addableOfferElements}
-                  </section>`;
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      ${offers.map(createOfferElement).join('')}</section>`;
     }
     return '';
   };
 
-  const addableOffersList = createAddableOfferList(offers);
-  const translatePhotoToHTML = (photo) => (`<img className="event__photo" src="${photo}">`);
-  const photosList = photos.map(translatePhotoToHTML).join('');
+  const createPhotoElement = (photo) => (`<img className="event__photo" src="${photo}">`);
   const createLocationOption = (city) => (`<option value="${city}"></option>`);
-  const locationOptions = locations().map(createLocationOption).join('');
   const createEventTypes = (types = eventTypes(), chosenEventType) => {
     const createType = (currentType) => {
       const isChecked = currentType === chosenEventType ? 'checked=""' : '';
@@ -51,7 +47,10 @@ const createAddEventItemTemplate = (tripEvent) => {
     return types.map(createType).join('');
   };
 
-  const eventTypesElements = createEventTypes(eventTypes(), eventType);
+  const addableOffersElement = createOffersList(offers);
+  const photosList = photos.map(createPhotoElement).join('');
+  const locationOptions = locations().map(createLocationOption).join('');
+  const eventTypesElement = createEventTypes(eventTypes(), eventType);
   const eventTypeLabel = eventType.charAt(0).toUpperCase() + eventType.slice(1);
   return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -65,7 +64,7 @@ const createAddEventItemTemplate = (tripEvent) => {
                     <div class="event__type-list">
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
-                        ${eventTypesElements}
+                        ${eventTypesElement}
                       </fieldset>
                     </div>
                   </div>
@@ -96,7 +95,7 @@ const createAddEventItemTemplate = (tripEvent) => {
                   <button class="event__reset-btn" type="reset">Cancel</button>
                 </header>
                 <section class="event__details">
-                  ${addableOffersList}
+                  ${addableOffersElement}
                   <section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${description}</p>
@@ -111,4 +110,26 @@ const createAddEventItemTemplate = (tripEvent) => {
             </li>`;
 };
 
-export {createAddEventItemTemplate};
+export default class AddEventItemView {
+  #element = null;
+  #event = null;
+
+  constructor(event) {
+    this.#event = event;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+    return this.#element;
+  }
+
+  get template() {
+    return createAddEventItemTemplate(this.#event);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
