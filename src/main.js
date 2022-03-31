@@ -19,14 +19,14 @@ const tripEventsElement = document.querySelector('.trip-events');
 const tripEventsListElement = new EventsListView();
 
 render(tripEventsElement, tripEventsListElement.element, RenderPosition.BEFOREEND);
-render(tripControlsFiltersElement, new TripFiltersView(), RenderPosition.BEFOREEND);
+render(tripControlsFiltersElement, new TripFiltersView().element, RenderPosition.BEFOREEND);
 render(tripControlsNavigationElement, new TripTabsView(), RenderPosition.BEFOREEND);
 render(tripEventsElement, new TripSortView(), RenderPosition.AFTERBEGIN);
 render(tripEventsListElement.element, new AddEventItemView(tripEvents[1]), RenderPosition.BEFOREEND);
-render(tripEventsListElement, new AddEventItemView(tripEvents[0]), RenderPosition.BEFOREEND);
+render(tripEventsListElement.element, new AddEventItemView(tripEvents[0]), RenderPosition.BEFOREEND);
 
 const renderEvent = (eventListElement, event) => {
-  const eventItemComponent = new TripEventItemView(event);
+  const eventItemComponent = new TripEventItemView(event).element;
   const eventEditComponent = new EventItemEditView(event);
 
   const changeFormToItem = () => {
@@ -45,7 +45,7 @@ const renderEvent = (eventListElement, event) => {
     }
   };
 
-  eventItemComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  eventItemComponent.querySelector('.event__rollup-btn').addEventListener('click', () => {
     changeItemToForm();
     document.addEventListener('keydown', onEscKeyDown);
   });
