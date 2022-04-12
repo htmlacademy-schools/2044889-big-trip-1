@@ -18,15 +18,15 @@ const tripControlsNavigationElement = document.querySelector('.trip-controls__na
 const tripEventsElement = document.querySelector('.trip-events');
 const tripEventsListElement = new EventsListView();
 
-render(tripEventsElement, tripEventsListElement.element, RenderPosition.BEFOREEND);
-render(tripControlsFiltersElement, new TripFiltersView().element, RenderPosition.BEFOREEND);
+render(tripEventsElement, tripEventsListElement, RenderPosition.BEFOREEND);
+render(tripControlsFiltersElement, new TripFiltersView(), RenderPosition.BEFOREEND);
 render(tripControlsNavigationElement, new TripTabsView(), RenderPosition.BEFOREEND);
 render(tripEventsElement, new TripSortView(), RenderPosition.AFTERBEGIN);
-render(tripEventsListElement.element, new AddEventItemView(tripEvents[1]), RenderPosition.BEFOREEND);
-render(tripEventsListElement.element, new AddEventItemView(tripEvents[0]), RenderPosition.BEFOREEND);
+render(tripEventsListElement, new AddEventItemView(tripEvents[1]), RenderPosition.BEFOREEND);
+render(tripEventsListElement, new AddEventItemView(tripEvents[0]), RenderPosition.BEFOREEND);
 
 const renderEvent = (eventListElement, event) => {
-  const eventItemComponent = new TripEventItemView(event).element;
+  const eventItemComponent = new TripEventItemView(event);
   const eventEditComponent = new EventItemEditView(event);
 
   const changeFormToItem = () => {
@@ -45,21 +45,20 @@ const renderEvent = (eventListElement, event) => {
     }
   };
 
-  eventItemComponent.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  eventItemComponent.clickHandler(() => {
     changeItemToForm();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  eventEditComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  eventEditComponent.setFormSubmit(() => {
     changeFormToItem();
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
-  render(eventListElement, eventItemComponent.element, RenderPosition.BEFOREEND);
+  render(eventListElement, eventItemComponent, RenderPosition.BEFOREEND);
 };
 
 
 for (let i = 1; i < TRIP_EVENTS_COUNT; i++) {
-  renderEvent(tripEventsListElement.element, tripEvents[i]);
+  renderEvent(tripEventsListElement, tripEvents[i]);
 }
