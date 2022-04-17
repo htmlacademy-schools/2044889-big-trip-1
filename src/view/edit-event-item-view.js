@@ -123,4 +123,15 @@ export default class EventItemEditView extends AbstractView {
     evt.preventDefault();
     this._callback.formSubmit();
   }
+
+  setRollupClickHandler = (callback) => {
+    this._callback.setRollupClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupClickHandler);
+  }
+
+  #rollupClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.rollupClick();
+  }
 }
+

@@ -1,5 +1,5 @@
 import { generateTripEvent } from './mock/trip-event.js';
-import { render, RenderPosition } from './render.js';
+import { render, RenderPosition } from './utils/render.js';
 import AddEventItemView from './view/add-event-item-view.js';
 import EventItemEditView from './view/edit-event-item-view.js';
 import EventsListView from './view/event-list-view.js';
@@ -7,6 +7,7 @@ import TripEventItemView from './view/trip-events-item-view.js';
 import TripFiltersView from './view/trip-filters-view.js';
 import TripSortView from './view/trip-sort-view.js';
 import TripTabsView from './view/trip-tabs-view.js';
+import NoTripsView from './view/no-trips-view.js';
 
 
 const TRIP_EVENTS_COUNT = 20;
@@ -18,12 +19,16 @@ const tripControlsNavigationElement = document.querySelector('.trip-controls__na
 const tripEventsElement = document.querySelector('.trip-events');
 const tripEventsListElement = new EventsListView();
 
-render(tripEventsElement, tripEventsListElement, RenderPosition.BEFOREEND);
 render(tripControlsFiltersElement, new TripFiltersView(), RenderPosition.BEFOREEND);
 render(tripControlsNavigationElement, new TripTabsView(), RenderPosition.BEFOREEND);
-render(tripEventsElement, new TripSortView(), RenderPosition.AFTERBEGIN);
-render(tripEventsListElement, new AddEventItemView(tripEvents[1]), RenderPosition.BEFOREEND);
-render(tripEventsListElement, new AddEventItemView(tripEvents[0]), RenderPosition.BEFOREEND);
+
+if (tripEvents.length === 0) {
+  render(tripEventsElement, new NoTripsView(), RenderPosition.BEFOREEND);
+} else {
+  render(tripEventsElement, new TripSortView(), RenderPosition.AFTERBEGIN);
+  render(tripEventsElement, tripEventsListElement, RenderPosition.BEFOREEND);
+  render(tripEventsListElement.element, new AddEventItemView(tripEvents[0]), RenderPosition.BEFOREEND);
+}
 
 const renderEvent = (eventListElement, event) => {
   const eventItemComponent = new TripEventItemView(event);
@@ -45,8 +50,13 @@ const renderEvent = (eventListElement, event) => {
     }
   };
 
-  eventItemComponent.clickHandler(() => {
+  eventEditComponent.setRollupClickHandler(() => {
     changeItemToForm();
+    document.addEventListener('keydown', onEscKeyDown);
+  });
+
+  eventItemComponent.clickHandler(() => {
+    changeFormToItem();
     document.addEventListener('keydown', onEscKeyDown);
   });
 

@@ -1,4 +1,4 @@
-import AbstractView from './view/abstract-view';
+import AbstractView from '../view/abstract-view';
 
 const RenderPosition = {
   BEFOREBEGIN: 'beforebegin',
@@ -27,9 +27,9 @@ const render = (container, element, place) => {
   }
 };
 
-const createElement = (tempalate) => {
+const createElement = (template) => {
   const newElement = document.createElement('div');
-  newElement.innerHTML = tempalate;
+  newElement.innerHTML = template;
 
   return newElement.firstElementChild;
 };
