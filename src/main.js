@@ -10,7 +10,7 @@ import TripTabsView from './view/trip-tabs-view.js';
 import NoTripsView from './view/no-trips-view.js';
 
 
-const TRIP_EVENTS_COUNT = 20;
+const TRIP_EVENTS_COUNT = 15;
 
 const tripEvents = Array.from({length: TRIP_EVENTS_COUNT}, generateTripEvent);
 
@@ -50,12 +50,12 @@ const renderEvent = (eventListElement, event) => {
     }
   };
 
-  eventEditComponent.setRollupClickHandler(() => {
+  eventItemComponent.clickHandler(() => {
     changeItemToForm();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  eventItemComponent.clickHandler(() => {
+  eventEditComponent.setRollupClickHandler(() => {
     changeFormToItem();
     document.addEventListener('keydown', onEscKeyDown);
   });
