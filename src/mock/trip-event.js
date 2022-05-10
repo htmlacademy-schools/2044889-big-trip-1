@@ -33,7 +33,7 @@ const generateDates = () => {
   };
 };
 
-const generatePoint = () => {
+const generateTripEvent = () => {
   const dates = generateDates();
   const locationsArray = locations();
   const eventsArray = eventTypes();
@@ -50,4 +50,4 @@ const generatePoint = () => {
   };
 };
 
-export {generatePoint};
+export {generateTripEvent};

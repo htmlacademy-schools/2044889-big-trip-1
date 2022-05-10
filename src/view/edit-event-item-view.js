@@ -3,7 +3,7 @@ import {locations} from '../mock/locations';
 import {eventTypes} from '../mock/event-types';
 import { createEventTypes , createOffersSection } from '../utils/route';
 import flatpickr from 'flatpickr';
-import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+//import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import SmartView from './smart-view';
 
 const createEventEditTemplate = (point) => {
