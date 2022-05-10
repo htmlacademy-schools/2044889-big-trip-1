@@ -1,41 +1,44 @@
-const createOffersSection = (editedOffers) => {
-  const createOffer = (offer) => {
-    const {name, type, price} = offer;
-
-    return `<div class="event__available-offers">
+const createOffersSection = (offersByTypes, pointType) => {
+  const createOffer = (offer) => `<div class="event__available-offers">
                       <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox" name="event-offer-${type}" >
+                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${pointType}-1" type="checkbox" name="event-offer-${pointType}" >
                         <label class="event__offer-label" for="event-offer-name-1">
-                          <span class="event__offer-title">${name}</span>
+                          <span class="event__offer-title">${offer.title}</span>
                           &plus;&euro;&nbsp;
-                          <span class="event__offer-price">${price}</span>
+                          <span class="event__offer-price">${offer.price}</span>
                         </label>
                       </div>`;
-  };
 
-  const offersMarkup = editedOffers.map(createOffer).join('');
+  let offersByCurrentType = [];
 
-  if (editedOffers.length !== 0) {
+  for (let i = 0; i < offersByTypes.length; i++) {
+    if (offersByTypes[i].type === pointType) {
+      offersByCurrentType = offersByTypes[i].offers;
+    }
+  }
+
+  const offersMarkup = offersByTypes.map(createOffer).join('');
+
+  if (offersByCurrentType.length !== 0) {
     return `<section class="event__section  event__section--offers">
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                     ${offersMarkup}</section>`;
   }
-
   return '';
 };
 
-const createEventTypes = (types, chosenEventType) => {
-  const createType = (type) => {
-    const isChecked = type === chosenEventType ? 'checked=""' : '';
-    const label = type.charAt(0).toUpperCase() + type.slice(1);
+const createEventTypes = (offers, chosenEventType) => {
+  const createType = (offer) => {
+    const isChecked = offer === chosenEventType ? 'checked=""' : '';
+    const label = offer.charAt(0).toUpperCase() + offer.slice(1);
 
     return `<div class="event__type-item">
-                          <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${isChecked}>
-                          <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${label}</label>
+                          <input id="event-type-${offer}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer}" ${isChecked}>
+                          <label class="event__type-label  event__type-label--${offer}" for="event-type-${offer}-1">${label}</label>
                         </div>`;
   };
 
-  return types.map(createType).join('');
+  return offers.map(createType).join('');
 };
 
 export {createEventTypes, createOffersSection};

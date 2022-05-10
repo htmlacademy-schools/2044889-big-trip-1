@@ -1,23 +1,23 @@
 import dayjs from 'dayjs';
 
-const sortTaskByDay = (pointA, pointB) => dayjs(pointA.startDate).diff(dayjs(pointB.startDate));
+const sortTaskByDay = (pointA, pointB) => dayjs(pointA.dateStart).diff(dayjs(pointB.dateStart));
 
 const sortTaskByDuration = (pointA, pointB) => {
-  const durationA = dayjs(pointA.endDate).diff(dayjs(pointA.startDate));
-  const durationB = dayjs(pointB.endDate).diff(dayjs(pointB.startDate));
+  const durationA = dayjs(pointA.dateStart).diff(dayjs(pointA.dateEnd));
+  const durationB = dayjs(pointB.dateStart).diff(dayjs(pointB.dateEnd));
 
   if (durationB - durationA !== 0) {
     return durationB - durationA;
   } else {
-    return dayjs(pointA.startDate).diff(dayjs(pointB.startDate));
+    return dayjs(pointA.dateEnd).diff(dayjs(pointB.dateEnd));
   }
 };
 
 const sortTaskByPrice = (pointA, pointB) => {
-  if(pointB.price - pointA.price !== 0) {
-    return pointB.price - pointA.price;
+  if(pointB.basePrice - pointA.basePrice !== 0) {
+    return pointB.basePrice - pointA.basePrice;
   } else {
-    return dayjs(pointA.startDate).diff(dayjs(pointB.startDate));
+    return dayjs(pointA.dateStart).diff(dayjs(pointB.dateStart));
   }
 };
 
