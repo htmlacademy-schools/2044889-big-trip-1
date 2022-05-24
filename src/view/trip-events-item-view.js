@@ -10,11 +10,11 @@ const createTripEventTemplate = (event) => {
   const dayStart = dayjs(ISOFrom).format('MMM D');
   const dateStart = dayjs(ISOFrom).format('YYYY-MM-DD');
 
-  const TimeFrom = dayjs(ISOFrom).format('HH:mm');
-  const DatetimeFrom = dayjs(ISOFrom).format('YYYY-MM-DDTHH:mm');
+  const timeFrom = dayjs(ISOFrom).format('HH:mm');
+  const datetimeFrom = dayjs(ISOFrom).format('YYYY-MM-DDTHH:mm');
 
-  const TimeTo = dayjs(ISOTo).format('HH:mm');
-  const DatetimeTo = dayjs(ISOTo).format('YYYY-MM-DDTHH:mm');
+  const timeTo = dayjs(ISOTo).format('HH:mm');
+  const datetimeTo = dayjs(ISOTo).format('YYYY-MM-DDTHH:mm');
 
   const getDuration = (beginISO, endISO) => {
     const getTimeDiff = () => {
@@ -78,9 +78,9 @@ const createTripEventTemplate = (event) => {
                 <h3 class="event__title">${type} ${destinationName}</h3>
                 <div class="event__schedule">
                   <p class="event__time">
-                    <time class="event__start-time" datetime="${DatetimeFrom}">${TimeFrom}</time>
+                    <time class="event__start-time" datetime="${datetimeFrom}">${timeFrom}</time>
                     &mdash;
-                    <time class="event__end-time" datetime="${DatetimeTo}">${TimeTo}</time>
+                    <time class="event__end-time" datetime="${datetimeTo}">${timeTo}</time>
                   </p>
                   <p class="event__duration">${duration}</p>
                 </div>

@@ -28,7 +28,7 @@ const generateDates = () => {
     .add(getRandomInteger(0, 59), 'minute');
 
   return {
-    start: startDate.toISOString,
+    start: startDate.toISOString(),
     end: endDay.toISOString()
   };
 };

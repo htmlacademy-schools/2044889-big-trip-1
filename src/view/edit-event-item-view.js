@@ -8,15 +8,15 @@ import SmartView from './smart-view';
 
 const createEventEditTemplate = (point) => {
   const {basePrice: price, dateStart: ISOFrom, dateEnd: ISOTo, location: location, type} = point;
-  const DatetimeFrom = dayjs(ISOFrom).format('DD/MM/YY HH:mm');
-  const DatetimeTo = dayjs(ISOTo).format('DD/MM/YY HH:mm');
+  const datetimeFrom = dayjs(ISOFrom).format('DD/MM/YY HH:mm');
+  const datetimeTo = dayjs(ISOTo).format('DD/MM/YY HH:mm');
 
   const pointTypeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 
   const pointTypesMarkup = createEventTypes(eventTypes(), type);
   const locationOptions = locations().map((x) => (`<option value="${x.name}"></option>`)).join('');
 
-  const photosMarkup = location.pictures.map((x) => (`<img className="event__photo" src="${x.src}" alt="${x.description}">`)).join('');
+  const photosMarkup = location.pictures.map((x) => (`<img class="event__photo" src="${x.src}" alt="${x.description}">`)).join('');
 
   const editedOffersMarkup = createOffersSection(eventTypes(), type);
 
@@ -47,10 +47,10 @@ const createEventEditTemplate = (point) => {
                   </div>
                   <div class="event__field-group  event__field-group--time">
                     <label class="visually-hidden" for="event-start-time-1">From</label>
-                    <input class="event__input  event__input--time event__input-start-time" id="event-start-time-1" type="text" name="event-start-time" value="${DatetimeFrom}">
+                    <input class="event__input  event__input--time event__input-start-time" id="event-start-time-1" type="text" name="event-start-time" value="${datetimeFrom}">
                     —
                     <label class="visually-hidden" for="event-end-time-1">To</label>
-                    <input class="event__input  event__input--time event__input-end-time" id="event-end-time-1" type="text" name="event-end-time" value="${DatetimeTo}">
+                    <input class="event__input  event__input--time event__input-end-time" id="event-end-time-1" type="text" name="event-end-time" value="${datetimeTo}">
                   </div>
                   <div class="event__field-group  event__field-group--price">
                     <label class="event__label" for="event-price-1">
