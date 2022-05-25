@@ -7,7 +7,7 @@ import flatpickr from 'flatpickr';
 import SmartView from './smart-view';
 
 const createEventEditTemplate = (point) => {
-  const {basePrice: price, dateStart: ISOFrom, dateEnd: ISOTo, location: location, type} = point;
+  const {basePrice: price, dateStart: ISOFrom, dateEnd: ISOTo, location: location, type: type} = point;
   const datetimeFrom = dayjs(ISOFrom).format('DD/MM/YY HH:mm');
   const datetimeTo = dayjs(ISOTo).format('DD/MM/YY HH:mm');
 
