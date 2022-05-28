@@ -39,7 +39,6 @@ export default class PointPresenter {
     this.#pointItemComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#pointEditComponent.setRollupClickHandler(this.#handleRollupClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
     if (prevPointItem === null || prevPointEdit === null) {
       render(this.#pointsListElement, this.#pointItemComponent, RenderPosition.BEFOREEND);

@@ -2,7 +2,7 @@ import {locations} from '../mock/locations';
 import {eventTypes} from '../mock/event-types';
 import { createEventTypes , createOffersSection } from '../utils/route';
 import flatpickr from 'flatpickr';
-import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+//import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import SmartView from './smart-view';
 import he from 'he';
 
@@ -84,7 +84,7 @@ export default class EventEditView extends SmartView {
 
   constructor(point) {
     super();
-    this._data = EventEditView.parseEventToData(point);
+    this._data = EventEditView.parsePointToData(point);
 
     this.#setInnerHandlers();
     this.#setDatepicker();
@@ -108,7 +108,7 @@ export default class EventEditView extends SmartView {
   }
 
   reset = (point) => {
-    this.updateData(EventEditView.parseEventToData(point));
+    this.updateData(EventEditView.parsePointToData(point));
   }
 
   #setDatepicker = () => {
