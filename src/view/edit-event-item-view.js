@@ -2,9 +2,9 @@ import {locations} from '../mock/locations';
 import {eventTypes} from '../mock/event-types';
 import { createEventTypes , createOffersSection } from '../utils/route';
 import flatpickr from 'flatpickr';
-//import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import SmartView from './smart-view';
 import he from 'he';
+
 
 const createEventEditTemplate = (point) => {
   const {basePrice: price, destination, type} = point;
@@ -111,6 +111,29 @@ export default class EventEditView extends SmartView {
     this.updateData(EventEditView.parsePointToData(point));
   }
 
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.#setDatepicker();
+    this.setRollupClickHandler(this._callback.rollupClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
+  }
+
+  setRollupClickHandler = (callback) => {
+    this._callback.rollupClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupClickHandler);
+  }
+
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  }
+
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
+  }
+
   #setDatepicker = () => {
     this.#datePickerFrom = flatpickr(
       this.element.querySelector('.event__input-start-time'),
@@ -132,6 +155,15 @@ export default class EventEditView extends SmartView {
     );
   }
 
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__type-group')
+      .addEventListener('change', this.#typeGroupClickHandler);
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__input--price')
+      .addEventListener('change', this.#basePriceChangeHandler);
+  }
+
   #dateFromChangeHandler = ([userDate]) => {
     this.updateData({
       dateFrom: userDate.toISOString(),
@@ -142,26 +174,6 @@ export default class EventEditView extends SmartView {
     this.updateData({
       dateTo: userDate.toISOString(),
     });
-  }
-
-  restoreHandlers = () => {
-    this.#setInnerHandlers();
-    this.#setDatepicker();
-    this.setRollupClickHandler(this._callback.rollupClick);
-    this.setFormSubmitHandler(this._callback.formSubmit);
-  }
-
-  #setInnerHandlers = () => {
-    this.element.querySelector('.event__type-group')
-      .addEventListener('change', this.#typeGroupClickHandler);
-    this.element.querySelector('.event__input--destination')
-      .addEventListener('change', this.#destinationChangeHandler);
-    this.element.querySelector('.event__input-start-time')
-      .addEventListener('change', this.#startTimeChangeHandler);
-    this.element.querySelector('.event__input-end-time')
-      .addEventListener('change', this.#endTimeChangeHandler);
-    this.element.querySelector('.event__input--price')
-      .addEventListener('change', this.#basePriceChangeHandler);
   }
 
   #typeGroupClickHandler = (evt) => {
@@ -178,30 +190,11 @@ export default class EventEditView extends SmartView {
     }, false);
   }
 
-  #startTimeChangeHandler = (evt) => {
-    evt.preventDefault();
-    this.updateData({
-      dateFrom: evt.target.value
-    }, true);
-  }
-
-  #endTimeChangeHandler = (evt) => {
-    evt.preventDefault();
-    this.updateData({
-      dateTo: evt.target.value
-    }, true);
-  }
-
   #basePriceChangeHandler = (evt) => {
     evt.preventDefault();
     this.updateData({
-      basePrice: evt.target.value
+      basePrice: parseInt(evt.target.value, 10)
     }, true);
-  }
-
-  setRollupClickHandler = (callback) => {
-    this._callback.rollupClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupClickHandler);
   }
 
   #rollupClickHandler = (evt) => {
@@ -209,16 +202,14 @@ export default class EventEditView extends SmartView {
     this._callback.rollupClick();
   }
 
-  setFormSubmitHandler = (callback) => {
-    this._callback.formSubmit = callback;
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-  }
-
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit();
-    this._callback.formSubmit(this._data);
     this._callback.formSubmit(EventEditView.parseDataToPoint(this._data));
+  }
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteCLick(EventEditView.parseDataToPoint(this._data));
   }
 
   static parsePointToData = (point) => ({...point,
