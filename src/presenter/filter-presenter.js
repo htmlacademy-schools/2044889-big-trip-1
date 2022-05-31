@@ -1,6 +1,6 @@
-import FilterView from '../view/trip-filters-view';
+import FilterView from '../view/trip-filters-view.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
-import { UpdateType } from '../utils/const';
+import { UpdateType, FilterType } from '../utils/const.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -12,9 +12,8 @@ export default class FilterPresenter {
   constructor(filterContainer, filterModel, tasksModel) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
-    this.#tasksModel = tasksModel;
 
-    this.#filterModel.addObserver(this.#handleModelEvent);
+    this.#tasksModel =tasksModel;
   }
 
   get filters() {
@@ -28,6 +27,9 @@ export default class FilterPresenter {
     this.#filterComponent = new FilterView(filters, this.#filterModel.filter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
 
+    this.#tasksModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+
     if (prevFilterComponent === null) {
       render(this.#filterContainer, this.#filterComponent, RenderPosition.BEFOREEND);
       return;
@@ -35,6 +37,16 @@ export default class FilterPresenter {
 
     replace(this.#filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
+  }
+
+  destroy = () => {
+    remove(this.#filterComponent);
+    this.#filterComponent = null;
+
+    this.#tasksModel.removeObserver(this.#handleModelEvent);
+    this.#filterModel.removeObserver(this.#handleModelEvent);
+
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
   }
 
   #handleModelEvent = () => {

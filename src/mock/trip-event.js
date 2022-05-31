@@ -39,11 +39,11 @@ const generateTripEvent = () => {
   const eventsArray = eventTypes();
 
   return {
-    id: nanoid(),
     basePrice: generatePrice(),
-    dateStart: dates.start,
-    dateEnd: dates.end,
+    dateFrom: dates.start,
+    dateTo: dates.end,
     destination: locationsArray[getRandomInteger(0, locationsArray.length - 1)],
+    id: nanoid(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
     events: eventsArray,
     type: eventsArray[getRandomInteger(0, eventsArray.length - 1)].type
