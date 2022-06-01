@@ -1,21 +1,19 @@
-import {locations} from '../mock/locations';
-import {eventTypes} from '../mock/event-types';
 import { createEventTypes , createOffersSection } from '../utils/route';
 import flatpickr from 'flatpickr';
 import SmartView from './smart-view';
 import he from 'he';
 
 
-const createEventEditTemplate = (point) => {
+const createEventEditTemplate = (point, offers, locations) => {
   const {basePrice: price, destination, type} = point;
   const pointTypeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 
-  const eventTypesMarkup = createEventTypes(eventTypes(), type);
-  const destinationOptions = locations().map((x) => (`<option value="${x.name}"></option>`)).join('');
+  const eventTypesMarkup = createEventTypes(offers, type);
+  const destinationOptions = locations.map((x) => (`<option value="${x.name}"></option>`)).join('');
 
   const photosMarkup = destination.pictures.map((x) => (`<img class="event__photo" src="${x.src}" alt="${x.description}">`)).join('');
 
-  const editedOffersMarkup = createOffersSection(eventTypes(), type);
+  const editedOffersMarkup = createOffersSection(offers, type);
 
   return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -81,17 +79,21 @@ const createEventEditTemplate = (point) => {
 export default class EventEditView extends SmartView {
   #datePickerFrom = null;
   #datePickerTo = null;
+  #offers = null;
+  #locations = null;
 
-  constructor(point) {
+  constructor(point, offers, locations) {
     super();
     this._data = EventEditView.parsePointToData(point);
 
+    this.#offers = offers;
+    this.#locations = locations;
     this.#setInnerHandlers();
     this.#setDatepicker();
   }
 
   get template() {
-    return createEventEditTemplate(this._data);
+    return createEventEditTemplate(this._data, this.#offers, this.#locations);
   }
 
   removeElement = () => {
@@ -186,7 +188,7 @@ export default class EventEditView extends SmartView {
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
     this.updateData({
-      destination: this.#getChangedLocation(evt.target.value)
+      destination: this.#getChangedLocation(evt.target.value, this.#locations)
     }, false);
   }
 
@@ -213,18 +215,16 @@ export default class EventEditView extends SmartView {
   }
 
   static parsePointToData = (point) => ({...point,
-    // to be continue
   });
 
   static parseDataToPoint = (data) => {
     const point = {...data};
-    // to be continue
 
     return point;
   }
 
-  #getChangedLocation = (locationName) => {
-    const allLocations = locations();
+  #getChangedLocation = (locationName, locations) => {
+    const allLocations = locations;
 
     for (let i = 0; i < allLocations.length; i++) {
       if (allLocations[i].name === locationName) {

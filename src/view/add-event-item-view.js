@@ -1,16 +1,14 @@
 import flatpickr from 'flatpickr';
 import SmartView from './smart-view';
-import { eventTypes } from '../mock/event-types';
-import { locations } from '../mock/locations';
 import { createEventTypes, createOffersSection } from '../utils/route';
 import he from 'he';
 
-const createAddEventItemTemplate = (point) => {
-  const {basePrice: price, destination, type} = point;
+const createAddEventItemTemplate = (point, offers, locations) => {
+  const { basePrice: price, destination, type } = point;
   const eventTypeLabel = type ? type.charAt(0).toUpperCase() + type.slice(1) : '';
 
-  const eventTypesMarkup = createEventTypes(eventTypes(), type);
-  const locationOptions = locations().map((x) => (`<option value="${x.name}"></option>`)).join('');
+  const eventTypesMarkup = createEventTypes(offers, type);
+  const locationOptions = locations.map((x) => (`<option value="${x.name}"></option>`)).join('');
 
   const createPhotosMarkup = (dest) => {
     if (dest.pictures.length > 0) {
@@ -24,7 +22,7 @@ const createAddEventItemTemplate = (point) => {
 
   const photosMarkup = createPhotosMarkup(destination);
 
-  const editedOffersMarkup = createOffersSection(eventTypes(), type);
+  const editedOffersMarkup = createOffersSection(offers, type);
 
   return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -63,7 +61,7 @@ const createAddEventItemTemplate = (point) => {
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(price ? price.toString() : '')}">
+                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(price.toString() ? price.toString() : '')}">
                   </div>
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
                   <button class="event__reset-btn" type="reset">Cancel</button>
@@ -86,16 +84,21 @@ export default class AddEventItemView extends SmartView {
   #datePickerFrom = null;
   #datePickerTo = null;
 
-  constructor(point) {
+  #offers = null;
+  #locations = null;
+
+  constructor(offers, locations) {
     super();
-    this._data = AddEventItemView.createEmptyPoint(point);
+    this._data = AddEventItemView.createEmptyPoint(offers);
+    this.#offers = offers;
+    this.#locations = locations;
 
     this.#setInnerHandlers();
     this.#setDatePicker();
   }
 
   get template() {
-    return createAddEventItemTemplate(this._data);
+    return createAddEventItemTemplate(this._data, this.#offers, this.#locations);
   }
 
   removeElement = () => {
@@ -209,8 +212,8 @@ export default class AddEventItemView extends SmartView {
     this._callback.deleteClick(AddEventItemView.parseDataToPoint(this._data));
   }
 
-  static createEmptyPoint = () => {
-    const offerArray = eventTypes();
+  static createEmptyPoint = (off) => {
+    const offerArray = off;
     const date = new Date();
     return {
       basePrice: 0,
@@ -221,15 +224,24 @@ export default class AddEventItemView extends SmartView {
         'name': '',
         'pictures': []
       },
-      id: null,
       isFavorite: false,
       offers: offerArray,
       type: 'taxi'
     };
   }
 
+  static parsePointToData = (point) => ({
+    ...point,
+  });
+
+  static parseDataToPoint = (data) => {
+    const point = {...data};
+
+    return point;
+  }
+
   #getChangedDestination = (locationName) => {
-    const allLocations = locations();
+    const allLocations = this.#locations;
 
     for (let i = 0; i < allLocations.length; i++) {
       if (allLocations[i].name === locationName) {
