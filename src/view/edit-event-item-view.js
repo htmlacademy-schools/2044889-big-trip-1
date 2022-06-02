@@ -4,12 +4,12 @@ import SmartView from './smart-view';
 import he from 'he';
 
 
-const createEventEditTemplate = (point, offers, locations) => {
+const createEventEditTemplate = (point, offers, destinations) => {
   const {basePrice: price, destination, type} = point;
   const pointTypeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 
   const eventTypesMarkup = createEventTypes(offers, type);
-  const destinationOptions = locations.map((x) => (`<option value="${x.name}"></option>`)).join('');
+  const destinationOptions = destinations.map((x) => (`<option value="${x.name}"></option>`)).join('');
 
   const photosMarkup = destination.pictures.map((x) => (`<img class="event__photo" src="${x.src}" alt="${x.description}">`)).join('');
 
@@ -80,20 +80,20 @@ export default class EventEditView extends SmartView {
   #datePickerFrom = null;
   #datePickerTo = null;
   #offers = null;
-  #locations = null;
+  #destinations = null;
 
-  constructor(point, offers, locations) {
+  constructor(point, offers, destinations) {
     super();
     this._data = EventEditView.parsePointToData(point);
 
     this.#offers = offers;
-    this.#locations = locations;
+    this.#destinations = destinations;
     this.#setInnerHandlers();
     this.#setDatepicker();
   }
 
   get template() {
-    return createEventEditTemplate(this._data, this.#offers, this.#locations);
+    return createEventEditTemplate(this._data, this.#offers, this.#destinations);
   }
 
   removeElement = () => {
@@ -188,7 +188,7 @@ export default class EventEditView extends SmartView {
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
     this.updateData({
-      destination: this.#getChangedLocation(evt.target.value, this.#locations)
+      destination: this.#getChangedLocation(evt.target.value, this.#destinations)
     }, false);
   }
 
@@ -223,8 +223,8 @@ export default class EventEditView extends SmartView {
     return point;
   }
 
-  #getChangedLocation = (locationName, locations) => {
-    const allLocations = locations;
+  #getChangedLocation = (locationName, destinations) => {
+    const allLocations = destinations;
 
     for (let i = 0; i < allLocations.length; i++) {
       if (allLocations[i].name === locationName) {

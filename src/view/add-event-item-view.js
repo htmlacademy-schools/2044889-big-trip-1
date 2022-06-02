@@ -3,12 +3,12 @@ import SmartView from './smart-view';
 import { createEventTypes, createOffersSection } from '../utils/route';
 import he from 'he';
 
-const createAddEventItemTemplate = (point, offers, locations) => {
+const createAddEventItemTemplate = (point, offers, destinations) => {
   const { basePrice: price, destination, type } = point;
   const eventTypeLabel = type ? type.charAt(0).toUpperCase() + type.slice(1) : '';
 
   const eventTypesMarkup = createEventTypes(offers, type);
-  const locationOptions = locations.map((x) => (`<option value="${x.name}"></option>`)).join('');
+  const locationOptions = destinations.map((x) => (`<option value="${x.name}"></option>`)).join('');
 
   const createPhotosMarkup = (dest) => {
     if (dest.pictures.length > 0) {
@@ -85,20 +85,20 @@ export default class AddEventItemView extends SmartView {
   #datePickerTo = null;
 
   #offers = null;
-  #locations = null;
+  #destinations = null;
 
-  constructor(offers, locations) {
+  constructor(offers, destinations) {
     super();
     this._data = AddEventItemView.createEmptyPoint(offers);
     this.#offers = offers;
-    this.#locations = locations;
+    this.#destinations = destinations;
 
     this.#setInnerHandlers();
     this.#setDatePicker();
   }
 
   get template() {
-    return createAddEventItemTemplate(this._data, this.#offers, this.#locations);
+    return createAddEventItemTemplate(this._data, this.#offers, this.#destinations);
   }
 
   removeElement = () => {
@@ -241,7 +241,7 @@ export default class AddEventItemView extends SmartView {
   }
 
   #getChangedDestination = (locationName) => {
-    const allLocations = this.#locations;
+    const allLocations = this.#destinations;
 
     for (let i = 0; i < allLocations.length; i++) {
       if (allLocations[i].name === locationName) {

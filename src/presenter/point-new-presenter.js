@@ -8,14 +8,14 @@ export default class PointNewPresenter {
   #pointAddComponent = null;
   #destroyCallback = null;
   #offers = null;
-  #locations = null;
+  #destinations = null;
 
   constructor(pointListContainer, changeData) {
     this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
   }
 
-  init = (callback, offers, locations) => {
+  init = (callback, offers, destinations) => {
     this.#destroyCallback = callback;
 
     if (this.#pointAddComponent !== null) {
@@ -23,8 +23,8 @@ export default class PointNewPresenter {
     }
 
     this.#offers = offers;
-    this.#locations = locations;
-    this.#pointAddComponent = new AddEventItemView(this.#offers, this.#locations);
+    this.#destinations = destinations;
+    this.#pointAddComponent = new AddEventItemView(this.#offers, this.#destinations);
     this.#pointAddComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointAddComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
