@@ -8,10 +8,15 @@ import {filter} from '../utils/filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../utils/const.js';
 import {sortTaskByDay, sortTaskByDuration, sortTaskByPrice} from '../utils/point.js';
 import LoadingView from '../view/loading-view.js';
+import createHeaderView from '../view/header-view.js';
+
+const tripMainContainer = document.querySelector('.trip-main');
 
 export default class TripPresenter {
   #mainContainer = null;
   #tableContainer = null;
+
+  #headerView = new createHeaderView();
 
   #pointsModel = null;
   #filterModel = null;
@@ -83,7 +88,7 @@ export default class TripPresenter {
     this.#clearTable();
     this.#renderTable();
 
-    this.#pointNewPresenter.init(callback, this.#destinations, this.#offers);
+    this.#pointNewPresenter.init(callback, this.#offers, this.#destinations);
   }
 
   #handleModeChange = () => {
@@ -149,6 +154,13 @@ export default class TripPresenter {
     this.#currentSortType = sortType;
     this.#clearTable();
     this.#renderTable();
+  }
+
+  renderHeaderView = () => {
+    if(this.points.length > 0 ) {
+      this.#headerView = new createHeaderView(this.points);
+      render(tripMainContainer,this.#headerView , RenderPosition.AFTERBEGIN);
+    }
   }
 
   #renderSort = () => {

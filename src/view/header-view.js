@@ -1,45 +1,45 @@
-import dayjs from 'dayjs';
 import AbstractView from './abstract-view';
-import { sortTaskByDuration } from '../utils/point';
+import dayjs from 'dayjs';
+import { sortTaskByDay } from '../utils/point';
 
 const createHeaderView = (points) => {
-  points.sort(sortTaskByDuration);
-  const cities = points.map((point) => point.city.currentCity.titleCity);
-  let allPrice = null;
-  points.forEach((point) => { allPrice += Number(point.startPrice); });
-  const dateBegin = dayjs(points[0].date.start).format('MMM D');
-  const dateEnd = dayjs(points[points.length - 1].date.end).format('MMM D');
+  points.sort(sortTaskByDay);
+  const arrayNameCities = points.map((event)=> event.city.currentCity.name);
+  let totalBasePrice = null;
+  points.forEach((point)=> {totalBasePrice += Number(point.basePrice);});
+  const dateBegin = dayjs(points[0].date.dataBeginEvent).format('D MMM');
+  const dateEnd = dayjs(points[points.length-1].date.dataEndEvent).format('DD MMM');
 
   let tripTitles = '';
 
-  if (cities.length <= 3) {
-    cities.forEach((cityName, index) => {
-      if (index === cities.length - 1) {
-        tripTitles += `${ cityName }`;
+  if(arrayNameCities.length <= 3) {
+    arrayNameCities.forEach((nameCity, index) => {
+      if(index === arrayNameCities.length - 1) {
+        tripTitles += `${nameCity}`;
       }
       else {
-        tripTitles += `${ cityName } &mdash; `;
+        tripTitles += `${nameCity} &mdash; `;
       }
     });
-  } else if (cities.length > 3) {
-    tripTitles = `${ cities[0] } &mdash; ... &mdash; ${ cities[cities.length - 1] }`;
+  }
+  else if(arrayNameCities.length > 3) {
+    tripTitles = `${arrayNameCities[0]} &mdash; ... &mdash; ${arrayNameCities[arrayNameCities.length - 1]}`;
   }
 
-  return `<section class="trip-main__trip-info  trip-info">
+  return`<section class="trip-main__trip-info  trip-info">
             <div class="trip-info__main">
-              <h1 class="trip-info__title">${ tripTitles }</h1>
-              <p class="trip-info__dates">${ dateBegin }&nbsp;&mdash;&nbsp;${ dateEnd }</p>
+              <h1 class="trip-info__title">${tripTitles}</h1>
+              <p class="trip-info__dates">${dateBegin}&nbsp;&mdash;&nbsp;${dateEnd}</p>
             </div>
             <p class="trip-info__cost">
-              Total: &euro;&nbsp; ${ allPrice } <span class="trip-info__cost-value"</span>
+              Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalBasePrice}</span>
             </p>
           </section>`;
 };
-
-export default class HeaderView extends AbstractView {
+export default class HeaderView extends AbstractView{
   #points = null;
 
-  constructor(points) {
+  constructor(points){
     super();
     this.#points = points;
   }
