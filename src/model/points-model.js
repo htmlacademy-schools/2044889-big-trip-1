@@ -79,12 +79,25 @@ export default class PointsModel extends AbstractObservable {
     }
   }
 
+  #getCompletedOffers = (offers) => {
+    const completedOffers = offers;
+
+    for (let i = 0; i < completedOffers.length; i++) {
+      if (typeof completedOffers[i].isChosen === 'undefined') {
+        completedOffers[i].isChosen = false;
+      }
+    }
+
+    return completedOffers;
+  }
+
   #adaptToClient = (point) => {
     const adaptedPoint = {...point,
       basePrice: point['base-price'],
       isFavorite: point['is-favorite'],
       dateTo: point['date-to'],
       dateFrom: point['date-from'],
+      offers: this.#getCompletedOffers(point['offers']),
     };
 
     delete adaptedPoint['base-price'];
