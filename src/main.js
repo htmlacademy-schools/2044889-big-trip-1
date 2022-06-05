@@ -5,15 +5,13 @@ import FilterPresenter from './presenter/filter-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filters-model.js';
 import StatsView from './view/statistics.js';
-import { generateTripEvent } from './mock/trip-event.js';
 import { MenuItem } from './utils/const.js';
+import ApiService from './service/api-service.js';
 
+const AUTHORIZATION = 'Basic t6aho7n6316tmklnmae98';
+const END_POINT = 'https://16.ecmascript.pages.academy/big-trip';
 
-const TRIP_EVENTS_COUNT = 15;
-
-const points = Array.from({length: TRIP_EVENTS_COUNT}, generateTripEvent);
-const pointsModel = new PointsModel();
-pointsModel.points = points;
+const pointsModel = new PointsModel(new ApiService(END_POINT, AUTHORIZATION));
 
 const filterModel = new FilterModel();
 
@@ -21,10 +19,11 @@ const pageMainElement = document.querySelector('.page-body');
 const tripControlsNavigationElement = document.querySelector('.trip-controls__navigation');
 const tripControlsFiltersElement = document.querySelector('.trip-controls__filters');
 
-const siteMenuComponent = new TripTabsView();
-render(tripControlsNavigationElement, siteMenuComponent, RenderPosition.BEFOREEND);
+tripControlsFiltersElement.classList.add('visually-hidden');
 
-const tripPresenter = new TripPresenter(pageMainElement, pointsModel, filterModel);
+const siteMenuComponent = new TripTabsView();
+
+const tripPresenter = new TripPresenter(pageMainElement, pointsModel, filterModel, new ApiService(END_POINT, AUTHORIZATION));
 const filterPresenter = new FilterPresenter(tripControlsFiltersElement, filterModel, pointsModel);
 
 let mode = 'TABLE';
@@ -58,10 +57,15 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-
 filterPresenter.init();
-tripPresenter.init();
+
+tripPresenter.init().finally(() => {
+  pointsModel.init().finally(() => {
+    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+    render(tripControlsNavigationElement, siteMenuComponent, RenderPosition.BEFOREBEGIN);
+    tripControlsFiltersElement.classList.remove('visually-hidden');
+  });
+});
 
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
   evt.preventDefault();
@@ -69,9 +73,11 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   filterPresenter.destroy();
   filterPresenter.init();
   tripPresenter.destroy();
-  tripPresenter.init();
-  tripPresenter.createPoint(handlePointNewFormClose);
-  siteMenuComponent.element.querySelector(`[data-menu-item=${MenuItem.TABLE}]`).classList.add('visually-hidden');
-  siteMenuComponent.element.querySelector(`[data-menu-item=${MenuItem.STATS}]`).classList.add('visually-hidden');
-  mode = 'TABLE';
+
+  tripPresenter.init().finally(() => {
+    tripPresenter.createPoint(handlePointNewFormClose);
+    siteMenuComponent.element.querySelector(`[data-menu-item=${MenuItem.TABLE}]`).classList.add('visually-hidden');
+    siteMenuComponent.element.querySelector(`[data-menu-item=${MenuItem.STATS}]`).classList.add('visually-hidden');
+    mode = 'TABLE';
+  });
 });
