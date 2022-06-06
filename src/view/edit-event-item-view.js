@@ -5,7 +5,7 @@ import SmartView from './smart-view';
 import he from 'he';
 
 
-const createEventEditTemplate = (point, destinations, ofOffers) => {
+const createEventEditTemplate = (point, ofOffers, destinations) => {
   const {basePrice: price, destination, type, offers, isDisabled, isSaving, isDeleting} = point;
   const pointTypeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 
@@ -93,7 +93,7 @@ export default class EventEditView extends SmartView {
   #ofOffers = null;
   #destinations = null;
 
-  constructor(point, destinations, ofOffers) {
+  constructor(point, ofOffers, destinations) {
     super();
     this._data = EventEditView.parsePointToData(point);
 

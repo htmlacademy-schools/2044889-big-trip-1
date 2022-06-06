@@ -4,7 +4,7 @@ import he from 'he';
 import { createEventTypes } from '../utils/route';
 import { getChangedByTypeOffers, changeCheckedOffers, createOffersSectionMarkup } from '../utils/offers';
 
-const createAddEventItemTemplate = (point, destinations, ofOffers) => {
+const createAddEventItemTemplate = (point, ofOffers, destinations) => {
   const { basePrice: price, destination, type, offers, isDisabled, isSaving } = point;
   const eventTypeLabel = type ? type.charAt(0).toUpperCase() + type.slice(1) : '';
 
@@ -88,7 +88,7 @@ export default class AddEventItemView extends SmartView {
   #ofOffers = null;
   #destinations = null;
 
-  constructor(destinations, offers) {
+  constructor(offers, destinations) {
     super();
     this._data = AddEventItemView.createEmptyPoint(offers);
     this.#ofOffers = offers;
@@ -99,7 +99,7 @@ export default class AddEventItemView extends SmartView {
   }
 
   get template() {
-    return createAddEventItemTemplate(this._data, this.#destinations, this.#ofOffers);
+    return createAddEventItemTemplate(this._data, this.#ofOffers, this.#destinations);
   }
 
   removeElement = () => {
