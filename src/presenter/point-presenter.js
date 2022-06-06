@@ -9,6 +9,12 @@ const Mode = {
   EDITING: 'EDITING'
 };
 
+export const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING'
+};
+
 export default class PointPresenter {
   #pointsListElement = null;
   #changeData = null;
@@ -20,14 +26,14 @@ export default class PointPresenter {
   #tripPoint = null;
   #mode = Mode.DEFAULT;
 
-  #offers = null;
+  #ofOffers = null;
   #destinations = null;
 
-  constructor(pointsListElement, chageData, changeMode, offers, destinations) {
+  constructor(pointsListElement, chageData, changeMode, destinations, ofOffers) {
     this.#pointsListElement = pointsListElement;
     this.#changeData = chageData;
     this.#changeMode = changeMode;
-    this.#offers = offers;
+    this.#ofOffers = ofOffers;
     this.#destinations = destinations;
   }
 
@@ -38,12 +44,13 @@ export default class PointPresenter {
     const prevPointEdit = this.#pointEditComponent;
 
     this.#pointItemComponent = new TripEventItemView(tripPoint);
-    this.#pointEditComponent = new EventEditView(tripPoint, this.#offers, this.#destinations);
+    this.#pointEditComponent = new EventEditView(tripPoint, this.#destinations, this.#ofOffers);
 
     this.#pointItemComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointItemComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#pointEditComponent.setRollupClickHandler(this.#handleRollupClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
+    this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
     if (prevPointItem === null || prevPointEdit === null) {
       render(this.#pointsListElement, this.#pointItemComponent, RenderPosition.BEFOREEND);
@@ -56,6 +63,7 @@ export default class PointPresenter {
 
     if (this.#mode === Mode.EDITING) {
       replace(this.#pointEditComponent, prevPointEdit);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointItem);
@@ -71,6 +79,39 @@ export default class PointPresenter {
     if (this.#mode !== Mode.DEFAULT) {
       this.#pointEditComponent.reset(this.#tripPoint);
       this.#changeFormToItem();
+    }
+  }
+
+  setViewState = (state) => {
+    if (this.#mode === Mode.DEFAULT) {
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this.#pointEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this.#pointEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this.#pointItemComponent.shake(resetFormState);
+        this.#pointEditComponent.shake(resetFormState);
+        break;
     }
   }
 
@@ -123,7 +164,6 @@ export default class PointPresenter {
       isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update,
     );
-    this.#changeFormToItem();
   }
 
   #handleDeleteClick = (task) => {

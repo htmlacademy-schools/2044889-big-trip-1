@@ -1,19 +1,20 @@
-import { createEventTypes , createOffersSection } from '../utils/route';
+import { createEventTypes } from '../utils/route';
+import { createOffersSectionMarkup, changeCheckedOffers, getChangedByTypeOffers } from '../utils/offers';
 import flatpickr from 'flatpickr';
 import SmartView from './smart-view';
 import he from 'he';
 
 
-const createEventEditTemplate = (point, offers, destinations) => {
-  const {basePrice: price, destination, type} = point;
+const createEventEditTemplate = (point, destinations, ofOffers) => {
+  const {basePrice: price, destination, type, offers, isDisabled, isSaving, isDeleting} = point;
   const pointTypeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 
-  const eventTypesMarkup = createEventTypes(offers, type);
+  const eventTypesMarkup = createEventTypes(ofOffers, type);
   const destinationOptions = destinations.map((x) => (`<option value="${x.name}"></option>`)).join('');
 
   const photosMarkup = destination.pictures.map((x) => (`<img class="event__photo" src="${x.src}" alt="${x.description}">`)).join('');
 
-  const editedOffersMarkup = createOffersSection(offers, type);
+  const editedOffersMarkup = createOffersSectionMarkup(offers, type);
 
   return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -23,7 +24,7 @@ const createEventEditTemplate = (point, offers, destinations) => {
                       <span class="visually-hidden">Choose event type</span>
                       <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
                     </label>
-                    <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+                    <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
                     <div class="event__type-list">
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
@@ -35,32 +36,42 @@ const createEventEditTemplate = (point, offers, destinations) => {
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${pointTypeLabel}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination.name)}" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination"
+                    value="${he.encode(destination.name)}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
                     <datalist id="destination-list-1">
                       ${destinationOptions}
                     </datalist>
                   </div>
                   <div class="event__field-group  event__field-group--time">
                     <label class="visually-hidden" for="event-start-time-1">From</label>
-                    <input class="event__input event__input--time event__input-start-time" id="event-start-time-1" type="text" name="event-start-time" value="">
+                    <input class="event__input event__input--time event__input-start-time" id="event-start-time-1" type="text"
+                    name="event-start-time" value="" ${isDisabled ? 'disabled' : ''}>
                     —
                     <label class="visually-hidden" for="event-end-time-1">To</label>
-                    <input class="event__input event__input--time event__input-end-time" id="event-end-time-1" type="text" name="event-end-time" value="">
+                    <input class="event__input event__input--time event__input-end-time" id="event-end-time-1" type="text"
+                    name="event-end-time" value="" ${isDisabled ? 'disabled' : ''}>
                   </div>
                   <div class="event__field-group  event__field-group--price">
                     <label class="event__label" for="event-price-1">
                       <span class="visually-hidden">Price</span>
                       €
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(price.toString())}">
+                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price"
+                    value="${he.encode(price.toString())}" ${isDisabled ? 'disabled' : ''}>
                   </div>
-                  <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-                  <button class="event__reset-btn" type="reset">Delete</button>
+                  <button class="event__save-btn  btn  btn--blue" type="submit"
+                  ${isDisabled ? 'disabled' : ''}>
+                    ${isSaving ? 'Saving...' : 'Save'}
+                  </button>
+                  <button class="event__reset-btn" type="reset"
+                  ${isDisabled ? 'disabled' : ''}>
+                    ${isDeleting ? 'Deleting...' : 'Delete'}
+                    </button>
                   <button class="event__rollup-btn" type="button">
                     <span class="visually-hidden">Open event</span>
                   </button>
                 </header>
-                <section class="event__details">
+                <section class="event__details ${isDisabled ? 'visually-hidden' : ''}">
                   ${editedOffersMarkup}
                   <section class="event__section  event__section--destination">
                     ${destination.description ? '<h3 class="event__section-title  event__section-title--destination">Destination</h3>': ''}
@@ -79,21 +90,21 @@ const createEventEditTemplate = (point, offers, destinations) => {
 export default class EventEditView extends SmartView {
   #datePickerFrom = null;
   #datePickerTo = null;
-  #offers = null;
+  #ofOffers = null;
   #destinations = null;
 
-  constructor(point, offers, destinations) {
+  constructor(point, destinations, ofOffers) {
     super();
     this._data = EventEditView.parsePointToData(point);
 
-    this.#offers = offers;
+    this.#ofOffers = ofOffers;
     this.#destinations = destinations;
     this.#setInnerHandlers();
     this.#setDatepicker();
   }
 
   get template() {
-    return createEventEditTemplate(this._data, this.#offers, this.#destinations);
+    return createEventEditTemplate(this._data, this.#ofOffers, this.#destinations);
   }
 
   removeElement = () => {
@@ -157,6 +168,12 @@ export default class EventEditView extends SmartView {
     );
   }
 
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateData({
+      dateFrom: userDate.toISOString(),
+    });
+  }
+
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#typeGroupClickHandler);
@@ -164,12 +181,27 @@ export default class EventEditView extends SmartView {
       .addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price')
       .addEventListener('change', this.#basePriceChangeHandler);
+
+    const offerElements = this.element.querySelectorAll('.event__offer-label');
+    for (let i = 0; i < offerElements.length; i++) {
+      offerElements[i].addEventListener('click', this.#offerClickHandler);
+    }
   }
 
-  #dateFromChangeHandler = ([userDate]) => {
+  #offerClickHandler = (evt) => {
+    evt.preventDefault();
+    const offers = this._data.offers;
+
     this.updateData({
-      dateFrom: userDate.toISOString(),
-    });
+      offers: changeCheckedOffers(offers, evt.target.getAttribute('data-title'))
+    }, false);
+  }
+
+  #basePriceChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateData({
+      basePrice: parseInt(evt.target.value, 10)
+    }, true);
   }
 
   #dateToChangeHandler = ([userDate]) => {
@@ -181,7 +213,8 @@ export default class EventEditView extends SmartView {
   #typeGroupClickHandler = (evt) => {
     evt.preventDefault();
     this.updateData({
-      type: evt.target.value
+      type: evt.target.value,
+      offers: getChangedByTypeOffers(this.#ofOffers, evt.target.value)
     }, false);
   }
 
@@ -190,13 +223,6 @@ export default class EventEditView extends SmartView {
     this.updateData({
       destination: this.#getChangedLocation(evt.target.value, this.#destinations)
     }, false);
-  }
-
-  #basePriceChangeHandler = (evt) => {
-    evt.preventDefault();
-    this.updateData({
-      basePrice: parseInt(evt.target.value, 10)
-    }, true);
   }
 
   #rollupClickHandler = (evt) => {
@@ -215,10 +241,17 @@ export default class EventEditView extends SmartView {
   }
 
   static parsePointToData = (point) => ({...point,
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false
   });
 
   static parseDataToPoint = (data) => {
     const point = {...data};
+
+    delete point.isDeleting;
+    delete point.isSaving;
+    delete point.isDisabled;
 
     return point;
   }

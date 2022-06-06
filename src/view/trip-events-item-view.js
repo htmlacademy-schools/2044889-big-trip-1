@@ -1,14 +1,13 @@
 import dayjs from 'dayjs';
 import AbstractView from './abstract-view';
-import { eventTypes } from '../mock/event-types';
 
-const createTripEventTemplate = (event) => {
-  const {basePrice: price, dateStart: ISOFrom, dateEnd: ISOTo, destination, isFavorite: isFavorite, type} = event;
+const createTripEventTemplate = (point) => {
+  const {basePrice: price, dateFrom: ISOFrom, dateTo: ISOTo, offers, destination, isFavorite, type} = point;
 
   const destinationName = destination.name;
 
-  const dayStart = dayjs(ISOFrom).format('MMM D');
-  const dateStart = dayjs(ISOFrom).format('YYYY-MM-DD');
+  const dayFrom = dayjs(ISOFrom).format('MMM D');
+  const dateFrom = dayjs(ISOFrom).format('YYYY-MM-DD');
 
   const timeFrom = dayjs(ISOFrom).format('HH:mm');
   const datetimeFrom = dayjs(ISOFrom).format('YYYY-MM-DDTHH:mm');
@@ -47,31 +46,23 @@ const createTripEventTemplate = (event) => {
 
   const duration = getDuration(ISOFrom, ISOTo);
 
-  const isFavoriteClass = isFavorite ? ' event__favorite-btn--active' : '';
+  const isFavoriteClass = isFavorite ? ' point__favorite-btn--active' : '';
 
-  const CreateOffers = (eventType, offersByTypes) => {
-    const createOfferMarkup = (offer) => `<li class="event__offer">
+  const CreateOffers = (checkedOffers) => {
+    const createOfferMarkup = (offer) => (offer.isChosen ? `<li class="event__offer">
                     <span class="event__offer-title">${offer.title}</span>
                     &plus;&euro;&nbsp;
                     <span class="event__offer-price">${offer.price}</span>
-                  </li>`;
+                  </li>` : '');
 
-    let offersByCurrentType = [];
-
-    for (let i = 0; i < offersByTypes.length; i++) {
-      if (offersByTypes[i].type === eventType) {
-        offersByCurrentType = offersByTypes[i].offers;
-      }
-    }
-
-    return offersByCurrentType.map(createOfferMarkup).join('');
+    return checkedOffers.map(createOfferMarkup).join('');
   };
 
-  const OffersMarkup = CreateOffers(type, eventTypes());
+  const OffersMarkup = CreateOffers(offers);
 
   return `<li class="trip-events__item">
               <div class="event">
-                <time class="event__date" datetime="${dateStart}">${dayStart}</time>
+                <time class="event__date" datetime="${dateFrom}">${dayFrom}</time>
                 <div class="event__type">
                   <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
                 </div>
@@ -103,34 +94,34 @@ const createTripEventTemplate = (event) => {
 };
 
 export default class EventEditView extends AbstractView {
-  #event = null;
+  #point = null;
 
-  constructor(event) {
+  constructor(point) {
     super();
-    this.#event = event;
+    this.#point = point;
   }
 
   get template() {
-    return createTripEventTemplate(this.#event);
+    return createTripEventTemplate(this.#point);
   }
 
   setEditClickHandler = (callback) => {
     this._callback.editClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.point__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
   #editClickHandler = (evt) => {
-    evt.preventDefault();
+    evt.prpointDefault();
     this._callback.editClick();
   }
 
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
-    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
+    this.element.querySelector('.point__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   }
 
   #favoriteClickHandler = (evt) => {
-    evt.preventDefault();
+    evt.prpointDefault();
     this._callback.favoriteClick();
   }
 }

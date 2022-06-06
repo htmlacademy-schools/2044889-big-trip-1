@@ -1,13 +1,14 @@
 import flatpickr from 'flatpickr';
 import SmartView from './smart-view';
-import { createEventTypes, createOffersSection } from '../utils/route';
 import he from 'he';
+import { createEventTypes } from '../utils/route';
+import { getChangedByTypeOffers, changeCheckedOffers, createOffersSectionMarkup } from '../utils/offers';
 
-const createAddEventItemTemplate = (point, offers, destinations) => {
-  const { basePrice: price, destination, type } = point;
+const createAddEventItemTemplate = (point, destinations, ofOffers) => {
+  const { basePrice: price, destination, type, offers, isDisabled, isSaving } = point;
   const eventTypeLabel = type ? type.charAt(0).toUpperCase() + type.slice(1) : '';
 
-  const eventTypesMarkup = createEventTypes(offers, type);
+  const eventTypesMarkup = createEventTypes(ofOffers, type);
   const locationOptions = destinations.map((x) => (`<option value="${x.name}"></option>`)).join('');
 
   const createPhotosMarkup = (dest) => {
@@ -22,7 +23,7 @@ const createAddEventItemTemplate = (point, offers, destinations) => {
 
   const photosMarkup = createPhotosMarkup(destination);
 
-  const editedOffersMarkup = createOffersSection(offers, type);
+  const editedOffersMarkup = createOffersSectionMarkup(offers, type);
 
   return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -32,7 +33,7 @@ const createAddEventItemTemplate = (point, offers, destinations) => {
                       <span class="visually-hidden">Choose event type</span>
                       <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
                     </label>
-                    <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+                    <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox ${isDisabled ? 'disabled' : ''}">
                     <div class="event__type-list">
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
@@ -51,22 +52,22 @@ const createAddEventItemTemplate = (point, offers, destinations) => {
                   </div>
                   <div class="event__field-group  event__field-group--time">
                     <label class="visually-hidden" for="event-start-time-1">From</label>
-                    <input class="event__input event__input--time event__input-start-time" id="event-start-time-1" type="text" name="event-start-time" value="">
+                    <input class="event__input event__input--time event__input-start-time" id="event-start-time-1" type="text" name="event-start-time" value="" ${isDisabled ? 'disabled' : ''}>
                     &mdash;
                     <label class="visually-hidden" for="event-end-time-1">To</label>
-                    <input class="event__input event__input--time event__input-end-time" id="event-end-time-1" type="text" name="event-end-time" value="">
+                    <input class="event__input event__input--time event__input-end-time" id="event-end-time-1" type="text" name="event-end-time" value="" ${isDisabled ? 'disabled' : ''}>
                   </div>
                   <div class="event__field-group  event__field-group--price">
                     <label class="event__label" for="event-price-1">
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(price.toString() ? price.toString() : '')}">
+                     <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(price.toString() ? price.toString() : '')}" ${isDisabled ? 'disabled' : ''}">
                   </div>
-                  <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+                  <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
                   <button class="event__reset-btn" type="reset">Cancel</button>
                 </header>
-                <section class="event__details">${editedOffersMarkup}<section class="event__section  event__section--destination">
+                <section class="event__details ${isDisabled ? 'visually-hidden' : ''}">${editedOffersMarkup}<section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${destination.description ? destination.description : ''}</p>
                     <div class="event__photos-container">
@@ -84,13 +85,13 @@ export default class AddEventItemView extends SmartView {
   #datePickerFrom = null;
   #datePickerTo = null;
 
-  #offers = null;
+  #ofOffers = null;
   #destinations = null;
 
-  constructor(offers, destinations) {
+  constructor(destinations, offers) {
     super();
     this._data = AddEventItemView.createEmptyPoint(offers);
-    this.#offers = offers;
+    this.#ofOffers = offers;
     this.#destinations = destinations;
 
     this.#setInnerHandlers();
@@ -98,7 +99,7 @@ export default class AddEventItemView extends SmartView {
   }
 
   get template() {
-    return createAddEventItemTemplate(this._data, this.#offers, this.#destinations);
+    return createAddEventItemTemplate(this._data, this.#destinations, this.#ofOffers);
   }
 
   removeElement = () => {
@@ -184,7 +185,17 @@ export default class AddEventItemView extends SmartView {
   #typeGroupClickHandler = (evt) => {
     evt.preventDefault();
     this.updateData({
-      type: evt.target.value
+      type: evt.target.value,
+      offers: getChangedByTypeOffers(this.#ofOffers, evt.target.value)
+    }, false);
+  }
+
+  #offerClickHandler = (evt) => {
+    evt.preventDefault();
+    const offers = this._data.offers;
+
+    this.updateData({
+      offers: changeCheckedOffers(offers, evt.target.getAttribute('data-title'))
     }, false);
   }
 
@@ -212,8 +223,34 @@ export default class AddEventItemView extends SmartView {
     this._callback.deleteClick(AddEventItemView.parseDataToPoint(this._data));
   }
 
-  static createEmptyPoint = (off) => {
-    const offerArray = off;
+  #getChangedDestination = (destinationName) => {
+    const allDestinations = this.#destinations;
+
+    for (let i = 0; i < allDestinations.length; i++) {
+      if (allDestinations[i].name === destinationName) {
+        return allDestinations[i];
+      }
+    }
+
+    return {
+      'description': null,
+      'name': '',
+      'pictures': []
+    };
+  };
+
+  static createEmptyPoint = (ofOffers) => {
+    let currentOffers = [];
+    for (let i = 0; i < ofOffers.length; i++) {
+      if (ofOffers[i].type === 'taxi') {
+        currentOffers = ofOffers[i].offers;
+      }
+    }
+
+    for (let i = 0; i < currentOffers.length; i++) {
+      currentOffers[i].isChosen = false;
+    }
+
     const date = new Date();
     return {
       basePrice: 0,
@@ -225,33 +262,28 @@ export default class AddEventItemView extends SmartView {
         'pictures': []
       },
       isFavorite: false,
-      offers: offerArray,
-      type: 'taxi'
+      offers: currentOffers,
+      type: 'taxi',
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
     };
   }
 
   static parsePointToData = (point) => ({
     ...point,
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false
   });
 
   static parseDataToPoint = (data) => {
     const point = {...data};
 
+    delete point.isChosen;
+    delete point.isSaving;
+    delete point.isDeleting;
+
     return point;
   }
-
-  #getChangedDestination = (locationName) => {
-    const allLocations = this.#destinations;
-
-    for (let i = 0; i < allLocations.length; i++) {
-      if (allLocations[i].name === locationName) {
-        return allLocations[i];
-      }
-    }
-    return {
-      'name': '',
-      'description': null,
-      'pictures': []
-    };
-  };
 }
