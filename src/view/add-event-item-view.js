@@ -107,7 +107,7 @@ export default class AddEventItemView extends SmartView {
   }
 
   get template() {
-    return createAddEventItemTemplate(this._data, this.#destinations, this.#ofOffers);
+    return createAddEventItemTemplate(this._data, this.#ofOffers, this.#destinations);
   }
 
   removeElement = () => {

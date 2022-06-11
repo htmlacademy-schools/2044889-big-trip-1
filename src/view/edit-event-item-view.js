@@ -104,7 +104,7 @@ export default class EventEditView extends SmartView {
   }
 
   get template() {
-    return createEventEditTemplate(this._data, this.#destinations, this.#ofOffers);
+    return createEventEditTemplate(this._data, this.#ofOffers, this.#destinations);
   }
 
   removeElement = () => {

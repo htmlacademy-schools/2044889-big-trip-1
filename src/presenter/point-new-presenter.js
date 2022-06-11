@@ -24,7 +24,7 @@ export default class PointNewPresenter {
 
     this.#allOffers = allOffers;
     this.#destinations = destinations;
-    this.#pointAddComponent = new AddEventItemView(this.#destinations, this.#allOffers);
+    this.#pointAddComponent = new AddEventItemView(this.#allOffers, this.#destinations);
     this.#pointAddComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointAddComponent.setDeleteClickHandler(this.#handleDeleteClick);
 

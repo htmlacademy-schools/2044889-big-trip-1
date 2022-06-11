@@ -84,7 +84,7 @@ export default class TripPresenter {
     this.#clearTable();
     this.#renderTable();
 
-    this.#pointNewPresenter.init(callback, this.#offers, this.#destinations);
+    this.#pointNewPresenter.init(callback,this.#destinations, this.#offers, );
   }
 
   #handleModeChange = () => {
