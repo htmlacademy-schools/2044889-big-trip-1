@@ -10,6 +10,8 @@ import {sortTaskByDay, sortTaskByDuration, sortTaskByPrice} from '../utils/point
 import LoadingView from '../view/loading-view.js';
 
 export default class TripPresenter {
+  #apiService = null;
+
   #mainContainer = null;
   #tableContainer = null;
 
@@ -17,20 +19,19 @@ export default class TripPresenter {
   #filterModel = null;
 
   #eventListComponent = new EventsListView();
+  #loadingComponent = new LoadingView();
   #noPointComponent = null;
   #sortComponent = null;
 
   #pointPresenter = new Map();
   #pointNewPresenter = null;
 
-  #apiService = null;
-  #loadingComponent = new LoadingView();
-  #isLoading = null;
-  #offers = null;
-  #destinations = null;
-
   #currentSortType = SortType.SORT_DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
+
+  #destinations = null;
+  #offers = null;
 
   constructor(mainContainer, pointsModel, filterModel, apiService) {
     this.#mainContainer = mainContainer;
@@ -83,7 +84,7 @@ export default class TripPresenter {
     this.#clearTable();
     this.#renderTable();
 
-    this.#pointNewPresenter.init(callback, this.#destinations, this.#offers);
+    this.#pointNewPresenter.init(callback,this.#destinations, this.#offers, );
   }
 
   #handleModeChange = () => {
@@ -159,7 +160,7 @@ export default class TripPresenter {
   }
 
   #renderTripPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#eventListComponent, this.#handleViewAction, this.#handleModeChange, this.#destinations, this.#offers);
+    const pointPresenter = new PointPresenter(this.#eventListComponent, this.#handleViewAction, this.#handleModeChange, this.#offers, this.#destinations);
     pointPresenter.init(point);
     this.#pointPresenter.set(point.id, pointPresenter);
   };

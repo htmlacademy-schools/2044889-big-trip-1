@@ -93,7 +93,7 @@ const createTripEventTemplate = (point) => {
             </li>`;
 };
 
-export default class EventEditView extends AbstractView {
+export default class TripEventItemView extends AbstractView {
   #point = null;
 
   constructor(point) {

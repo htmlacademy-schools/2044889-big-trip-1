@@ -5,7 +5,7 @@ import SmartView from './smart-view';
 import he from 'he';
 
 
-const createEventEditTemplate = (point, destinations, ofOffers) => {
+const createEventEditTemplate = (point, ofOffers, destinations) => {
   const {basePrice: price, destination, type, offers, isDisabled, isSaving, isDeleting} = point;
   const pointTypeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 
@@ -93,7 +93,7 @@ export default class EventEditView extends SmartView {
   #ofOffers = null;
   #destinations = null;
 
-  constructor(point, destinations, ofOffers) {
+  constructor(point, ofOffers, destinations) {
     super();
     this._data = EventEditView.parsePointToData(point);
 
@@ -168,12 +168,6 @@ export default class EventEditView extends SmartView {
     );
   }
 
-  #dateFromChangeHandler = ([userDate]) => {
-    this.updateData({
-      dateFrom: userDate.toISOString(),
-    });
-  }
-
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#typeGroupClickHandler);
@@ -188,20 +182,10 @@ export default class EventEditView extends SmartView {
     }
   }
 
-  #offerClickHandler = (evt) => {
-    evt.preventDefault();
-    const offers = this._data.offers;
-
+  #dateFromChangeHandler = ([userDate]) => {
     this.updateData({
-      offers: changeCheckedOffers(offers, evt.target.getAttribute('data-title'))
-    }, false);
-  }
-
-  #basePriceChangeHandler = (evt) => {
-    evt.preventDefault();
-    this.updateData({
-      basePrice: parseInt(evt.target.value, 10)
-    }, true);
+      dateFrom: userDate.toISOString(),
+    });
   }
 
   #dateToChangeHandler = ([userDate]) => {
@@ -218,11 +202,26 @@ export default class EventEditView extends SmartView {
     }, false);
   }
 
+  #offerClickHandler = (evt) => {
+    evt.preventDefault();
+    const offers = this._data.offers;
+    this.updateData({
+      offers: changeCheckedOffers(offers, evt.target.getAttribute('data-title'))
+    }, false);
+  }
+
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
     this.updateData({
       destination: this.#getChangedLocation(evt.target.value, this.#destinations)
     }, false);
+  }
+
+  #basePriceChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateData({
+      basePrice: parseInt(evt.target.value, 10)
+    }, true);
   }
 
   #rollupClickHandler = (evt) => {
@@ -241,7 +240,6 @@ export default class EventEditView extends SmartView {
   }
 
   static parsePointToData = (point) => ({...point,
-    isDisabled: false,
     isSaving: false,
     isDeleting: false
   });

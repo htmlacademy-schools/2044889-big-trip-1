@@ -29,7 +29,7 @@ export default class PointPresenter {
   #ofOffers = null;
   #destinations = null;
 
-  constructor(pointsListElement, chageData, changeMode, destinations, ofOffers) {
+  constructor(pointsListElement, chageData, changeMode, ofOffers, destinations) {
     this.#pointsListElement = pointsListElement;
     this.#changeData = chageData;
     this.#changeMode = changeMode;
@@ -44,7 +44,7 @@ export default class PointPresenter {
     const prevPointEdit = this.#pointEditComponent;
 
     this.#pointItemComponent = new TripEventItemView(tripPoint);
-    this.#pointEditComponent = new EventEditView(tripPoint, this.#destinations, this.#ofOffers);
+    this.#pointEditComponent = new EventEditView(tripPoint, this.#ofOffers, this.#destinations);
 
     this.#pointItemComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointItemComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
@@ -62,7 +62,7 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointEditComponent, prevPointEdit);
+      replace(this.#pointItemComponent, prevPointEdit);
       this.#mode = Mode.DEFAULT;
     }
 
