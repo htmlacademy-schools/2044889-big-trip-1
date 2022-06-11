@@ -44,7 +44,7 @@ export default class PointPresenter {
     const prevPointEdit = this.#pointEditComponent;
 
     this.#pointItemComponent = new TripEventItemView(tripPoint);
-    this.#pointEditComponent = new EventEditView(tripPoint, this.#ofOffers, this.#destinations);
+    this.#pointEditComponent = new EventEditView(tripPoint, this.#destinations, this.#ofOffers);
 
     this.#pointItemComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointItemComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
@@ -62,7 +62,7 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointEditComponent, prevPointEdit);
+      replace(this.#pointItemComponent, prevPointEdit);
       this.#mode = Mode.DEFAULT;
     }
 

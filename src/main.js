@@ -11,8 +11,9 @@ import ApiService from './service/api-service.js';
 const AUTHORIZATION = 'Basic t6aho7n6316tmklnmae98';
 const END_POINT = 'https://16.ecmascript.pages.academy/big-trip';
 
-const pointsModel = new PointsModel(new ApiService(END_POINT, AUTHORIZATION));
+const apiService = new ApiService(END_POINT, AUTHORIZATION);
 
+const pointsModel = new PointsModel(apiService);
 const filterModel = new FilterModel();
 
 const pageMainElement = document.querySelector('.page-body');
@@ -23,7 +24,7 @@ tripControlsFiltersElement.classList.add('visually-hidden');
 
 const siteMenuComponent = new TripTabsView();
 
-const tripPresenter = new TripPresenter(pageMainElement, pointsModel, filterModel, new ApiService(END_POINT, AUTHORIZATION));
+const tripPresenter = new TripPresenter(pageMainElement, pointsModel, filterModel, apiService);
 const filterPresenter = new FilterPresenter(tripControlsFiltersElement, filterModel, pointsModel);
 
 let mode = 'TABLE';
@@ -63,7 +64,7 @@ filterPresenter.init();
 tripPresenter.init().finally(() => {
   pointsModel.init().finally(() => {
     siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-    render(tripControlsNavigationElement, siteMenuComponent, RenderPosition.BEFOREBEGIN);
+    render(tripControlsNavigationElement, siteMenuComponent, RenderPosition.BEFOREEND);
     tripControlsFiltersElement.classList.remove('visually-hidden');
   });
 });

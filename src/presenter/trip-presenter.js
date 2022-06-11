@@ -8,34 +8,30 @@ import {filter} from '../utils/filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../utils/const.js';
 import {sortTaskByDay, sortTaskByDuration, sortTaskByPrice} from '../utils/point.js';
 import LoadingView from '../view/loading-view.js';
-import createHeaderView from '../view/header-view.js';
-
-const tripMainContainer = document.querySelector('.trip-main');
 
 export default class TripPresenter {
+  #apiService = null;
+
   #mainContainer = null;
   #tableContainer = null;
-
-  #headerView = new createHeaderView();
 
   #pointsModel = null;
   #filterModel = null;
 
   #eventListComponent = new EventsListView();
+  #loadingComponent = new LoadingView();
   #noPointComponent = null;
   #sortComponent = null;
 
   #pointPresenter = new Map();
   #pointNewPresenter = null;
 
-  #apiService = null;
-  #loadingComponent = new LoadingView();
-  #isLoading = null;
-  #offers = null;
-  #destinations = null;
-
   #currentSortType = SortType.SORT_DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
+
+  #destinations = null;
+  #offers = null;
 
   constructor(mainContainer, pointsModel, filterModel, apiService) {
     this.#mainContainer = mainContainer;
@@ -154,13 +150,6 @@ export default class TripPresenter {
     this.#currentSortType = sortType;
     this.#clearTable();
     this.#renderTable();
-  }
-
-  renderHeaderView = () => {
-    if(this.points.length > 0 ) {
-      this.#headerView = new createHeaderView(this.points);
-      render(tripMainContainer,this.#headerView , RenderPosition.AFTERBEGIN);
-    }
   }
 
   #renderSort = () => {

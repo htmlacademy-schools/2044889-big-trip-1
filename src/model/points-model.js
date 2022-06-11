@@ -94,17 +94,17 @@ export default class PointsModel extends AbstractObservable {
   #adaptToClient = (point) => {
     const adaptedPoint = {...point,
       basePrice: point['base-price'],
-      isFavorite: point['is-favorite'],
-      dateTo: point['date-to'],
       dateFrom: point['date-from'],
+      dateTo: point['date-to'],
+      isFavorite: point['is-favorite'],
       offers: this.#getCompletedOffers(point['offers']),
     };
 
     delete adaptedPoint['base-price'];
-    delete adaptedPoint['is_favorite'];
-    delete adaptedPoint['date_to'];
     delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
 
     return adaptedPoint;
-  }
+  };
 }
